@@ -19,10 +19,85 @@ The data comprises 3049 individual products from 3 categories and 7 departments,
 
 ***calendar.csv:*** dates together with related features like day-of-the week, month, year, and an 3 binary flags for whether the stores in each state allowed purchases with SNAP food stamps at this date (1) or not (0).
 
+***CNN model with Time Distribution***
+Convolutional Neural Network models, or CNNs for short, can be applied to time series forecasting.
+
+There are many types of CNN models that can be used for each specific type of time series forecasting problem.
+
+Let's discover how to develop a suite of CNN models for a range of standard time series forecasting problems.
+
+
+* CNN models for univariate time series forecasting.
+* CNN models for multivariate time series forecasting.
+* CNN models for multi-step time series forecasting.
+
+Although traditionally developed for two-dimensional image data, CNNs can be used to model univariate time series forecasting problems.
+
+Univariate time series are datasets comprised of a single series of observations with a temporal ordering and a model is required to learn from the series of past observations to predict the next value in the sequence.
+
+This section is divided into two parts; they are:
+
+Data Preparation
+CNN Model
+Data Preparation
+Before a univariate series can be modeled, it must be prepared.
+
+The CNN model will learn a function that maps a sequence of past observations as input to an output observation. As such, the sequence of observations must be transformed into multiple examples from which the model can learn.
+
+Consider a given univariate sequence:
+
+[10, 20, 30, 40, 50, 60, 70, 80, 90]
+1
+[10, 20, 30, 40, 50, 60, 70, 80, 90]
+We can divide the sequence into multiple input/output patterns called samples, where three time steps are used as input and one time step is used as output for the one-step prediction that is being learned.
+
+X,				y
+10, 20, 30		40
+20, 30, 40		50
+30, 40, 50		60
+...
+1
+2
+3
+4
+5
+X,				y
+10, 20, 30		40
+20, 30, 40		50
+30, 40, 50		60
+...
+The split_sequence() function below implements this behavior and will split a given univariate sequence into multiple samples where each sample has a specified number of time steps and the output is a single time step.
+
+Running the example splits the univariate series into six samples where each sample has three input time steps and one output time step.
+
+[10 20 30] 40
+[20 30 40] 50
+[30 40 50] 60
+[40 50 60] 70
+[50 60 70] 80
+[60 70 80] 90
+1
+2
+3
+4
+5
+6
+[10 20 30] 40
+[20 30 40] 50
+[30 40 50] 60
+[40 50 60] 70
+[50 60 70] 80
+[60 70 80] 90
+Now that we know how to prepare a univariate series for modeling, a CNN model that can learn the mapping of inputs to outputs.
+
+
+
+***The Result***
+
+The results of the trained CNN with different epochs. CNN starts to the learn the trend in 50 epochs. After 300 epochs, the predicted trend and real trend has exectly the same ups and downs.
+
 ***The metrics:***
 
-The point forecast submission are being evaluated using the Root Mean Squared Scaled Error (RMSSE), which is derived from the Mean Absolute Scaled Error (MASE) that was designed to be scale invariant and symmetric. In a similar way to the MASE, the RMSSE is scale invariant and symmetric, and measures the prediction error (i.e. forecast - truth) relative to a “naive forecast” that simply assumes that step i = step i-1. In contrast to the MASE, here both prediction error and naive error are scaled to account for the goal of estimating average values in the presence of many zeros.
+The point forecast submission are being evaluated using the Root Mean Squared Scaled Error (RMSE),  metrics are computed for each time series and then averaged accross all time series including weights. The weights are proportional to the sales volume of the item, in dollars, to give more importance to high selling products. Note, that the weights are based on the last 28 days of the training data, and that those dates will be adjusted for the ultimate evaluation data, as confirmed by the organisers.
+### The result is measured with RMSE. The score is 1.63440. 
 
-The uncertainy distributions are being evaluated using the Weighted Scaled Pinball Loss (WSPL). We are asked to provide the 50%, 67%, 95%, and 99% uncertainty intervals together with the forecasted median.
-
-Both metrics are computed for each time series and then averaged accross all time series including weights. The weights are proportional to the sales volume of the item, in dollars, to give more importance to high selling products. Note, that the weights are based on the last 28 days of the training data, and that those dates will be adjusted for the ultimate evaluation data, as confirmed by the organisers.
